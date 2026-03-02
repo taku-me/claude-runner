@@ -1,4 +1,4 @@
-from hello import hello, goodbye, greet_all
+from hello import hello, goodbye, hello_all
 
 
 def test_hello():
@@ -9,12 +9,12 @@ def test_goodbye():
     assert goodbye("World") == "Goodbye, World!"
 
 
-def test_greet_all():
-    assert greet_all(["Alice", "Bob"]) == ["Hello, Alice!", "Hello, Bob!"]
+def test_hello_all():
+    assert hello_all(["Alice", "Bob"]) == ["Hello, Alice!", "Hello, Bob!"]
 
 
-def test_greet_all_empty():
-    assert greet_all([]) == []
+def test_hello_all_empty():
+    assert hello_all([]) == []
 
 
 def test_hello_empty_string():

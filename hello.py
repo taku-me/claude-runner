@@ -21,6 +21,6 @@ def goodbye(name):
     return f"Goodbye, {name}!"
 
 
-def greet_all(names):
-    logger.debug("greet_all called with %d name(s)", len(names))
+def hello_all(names):
+    logger.debug("hello_all called with %d name(s)", len(names))
     return [hello(name) for name in names]
