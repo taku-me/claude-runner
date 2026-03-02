@@ -8,21 +8,21 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def hello(name):
+def hello(name: str) -> str:
     logger.debug("hello called with name=%r", name)
     if name is None or name == "":
         name = "World"
     return f"Hello, {name}!"
 
 
-def goodbye(name):
+def goodbye(name: str) -> str:
     logger.debug("goodbye called with name=%r", name)
     if name is None or name == "":
         name = "World"
     return f"Goodbye, {name}!"
 
 
-def greet_all(names):
+def greet_all(names: list[str]) -> list[str]:
     logger.debug("greet_all called with %d name(s)", len(names))
     return [hello(name) for name in names]
 
