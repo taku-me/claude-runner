@@ -118,7 +118,7 @@ CLAUDE_EXIT=0
 claude -p "$PROMPT" \
   --max-turns "$MAX_TURNS" \
   --dangerously-skip-permissions \
-  --verbose 2>&1 | tee -a "$LOG_FILE" || CLAUDE_EXIT=$?
+  --verbose < /dev/null 2>&1 | tee -a "$LOG_FILE" || CLAUDE_EXIT=$?
 
 # --- 結果判定 ---
 # Claude Code がコミット済みの場合: main..HEAD に差分がある
