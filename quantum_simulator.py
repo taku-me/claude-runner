@@ -69,15 +69,15 @@ def shor_factor(n, max_attempts=100):
 def simulate_quantum_factoring(n, num_qubits=None):
     logger.debug("simulate_quantum_factoring called with n=%d, num_qubits=%s", n, num_qubits)
 
+    if n < 2:
+        return {"success": False, "error": "n must be >= 2"}
+
     if num_qubits is None:
         num_qubits = max(2 * math.ceil(math.log2(n + 1)), 4)
 
     if num_qubits > 1000:
         logger.warning("num_qubits=%d exceeds maximum of 1000", num_qubits)
         return {"success": False, "error": "num_qubits exceeds maximum of 1000"}
-
-    if n < 2:
-        return {"success": False, "error": "n must be >= 2"}
 
     if is_prime(n):
         return {"success": False, "error": f"{n} is prime"}
