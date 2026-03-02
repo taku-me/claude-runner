@@ -11,6 +11,7 @@ unset CLAUDECODE 2>/dev/null || true
 # --- デフォルト値 ---
 MAX_ISSUES=3
 MAX_TURNS=15
+MODEL="claude-sonnet-4-6"
 REPO=""
 AUTO_YES=false
 WORK_BASE="/tmp/claude-runner"
@@ -21,13 +22,14 @@ while [[ $# -gt 0 ]]; do
     --repo)       REPO="$2";       shift 2 ;;
     --max-issues) MAX_ISSUES="$2"; shift 2 ;;
     --max-turns)  MAX_TURNS="$2";  shift 2 ;;
+    --model)      MODEL="$2";      shift 2 ;;
     --yes|-y)     AUTO_YES=true;   shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
 
 if [[ -z "$REPO" ]]; then
-  echo "Usage: $0 --repo OWNER/REPO [--max-issues N] [--max-turns N] [--yes]"
+  echo "Usage: $0 --repo OWNER/REPO [--max-issues N] [--max-turns N] [--model MODEL] [--yes]"
   exit 1
 fi
 
@@ -82,12 +84,13 @@ ${EXISTING_ISSUES:-なし}
   }
 ]"
 
-log "Claude Code を起動 (max-turns: ${MAX_TURNS})"
+log "Claude Code を起動 (max-turns: ${MAX_TURNS}, model: ${MODEL})"
 
 RESULT_FILE=$(mktemp)
 CLAUDE_EXIT=0
 claude -p "$PROMPT" \
   --max-turns "$MAX_TURNS" \
+  --model "$MODEL" \
   --dangerously-skip-permissions \
   --output-format json \
   < /dev/null \
