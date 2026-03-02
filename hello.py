@@ -22,5 +22,7 @@ def goodbye(name):
 
 
 def greet_all(names):
+    if not names:
+        return []
     logger.debug("greet_all called with %d name(s)", len(names))
     return [hello(name) for name in names]

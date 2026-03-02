@@ -31,3 +31,7 @@ def test_goodbye_empty_string():
 
 def test_goodbye_none():
     assert goodbye(None) == "Goodbye, World!"
+
+
+def test_greet_all_none():
+    assert greet_all(None) == []
