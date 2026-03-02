@@ -5,29 +5,10 @@ import random
 logger = logging.getLogger(__name__)
 
 
-def gcd(a, b):
-    logger.debug("gcd called with a=%d, b=%d", a, b)
-    while b:
-        a, b = b, a % b
-    return a
-
-
-def mod_pow(base, exponent, modulus):
-    logger.debug("mod_pow called with base=%d, exponent=%d, modulus=%d", base, exponent, modulus)
-    result = 1
-    base = base % modulus
-    while exponent > 0:
-        if exponent % 2 == 1:
-            result = (result * base) % modulus
-        exponent = exponent >> 1
-        base = (base * base) % modulus
-    return result
-
-
 def find_period(a, n):
     logger.debug("find_period called with a=%d, n=%d", a, n)
     r = 1
-    while mod_pow(a, r, n) != 1:
+    while pow(a, r, n) != 1:
         r += 1
         if r > n:
             logger.warning("Period not found for a=%d, n=%d", a, n)
@@ -58,7 +39,7 @@ def shor_factor(n, max_attempts=100):
         a = random.randint(2, n - 1)
         logger.debug("Attempt %d: trying a=%d", attempt + 1, a)
 
-        d = gcd(a, n)
+        d = math.gcd(a, n)
         if d > 1:
             logger.info("Found factor %d by gcd on attempt %d", d, attempt + 1)
             return d
@@ -67,12 +48,12 @@ def shor_factor(n, max_attempts=100):
         if r is None or r % 2 != 0:
             continue
 
-        x = mod_pow(a, r // 2, n)
+        x = pow(a, r // 2, n)
         if x == n - 1:
             continue
 
-        factor1 = gcd(x - 1, n)
-        factor2 = gcd(x + 1, n)
+        factor1 = math.gcd(x - 1, n)
+        factor2 = math.gcd(x + 1, n)
 
         if 1 < factor1 < n:
             logger.info("Found factor %d on attempt %d", factor1, attempt + 1)
