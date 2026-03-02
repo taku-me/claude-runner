@@ -58,7 +58,7 @@ fi
 
 # --- 既存 Issue のタイトル一覧を取得 ---
 log "既存の Issue を確認中..."
-EXISTING_ISSUES=$(gh issue list --repo "$REPO" --state open --json title --jq '.[].title' 2>/dev/null || true)
+EXISTING_ISSUES=$(gh issue list --repo "$REPO" --state all --limit 500 --json title --jq '.[].title' 2>/dev/null || true)
 
 # --- Claude Code で分析 ---
 PROMPT="あなたはこのリポジトリのコードレビュアーです。コードベースを読んで改善点を洗い出し、GitHub Issue として提案してください。
