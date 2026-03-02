@@ -86,6 +86,8 @@ else
   cd "$WORK_DIR"
 fi
 
+DEFAULT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
 # 既存ブランチがあれば削除してクリーンな状態にする
 git branch -D "$BRANCH" 2>/dev/null || true
 git checkout -b "$BRANCH"
@@ -121,10 +123,10 @@ claude -p "$PROMPT" \
   --verbose < /dev/null 2>&1 | tee -a "$LOG_FILE" || CLAUDE_EXIT=$?
 
 # --- 結果判定 ---
-# Claude Code がコミット済みの場合: main..HEAD に差分がある
+# Claude Code がコミット済みの場合: DEFAULT_BRANCH..HEAD に差分がある
 # Claude Code が未コミットの場合: git status --porcelain に差分がある
 UNCOMMITTED=$(git status --porcelain)
-COMMITTED=$(git log main..HEAD --oneline 2>/dev/null || true)
+COMMITTED=$(git log "${DEFAULT_BRANCH}..HEAD" --oneline 2>/dev/null || true)
 
 if [[ -z "$UNCOMMITTED" && -z "$COMMITTED" ]]; then
   log "変更なし — Claude は修正を行いませんでした"
@@ -166,7 +168,7 @@ if [[ -n "$EXISTING_PR" ]]; then
 else
   PR_URL=$(gh pr create \
     --repo "$REPO" \
-    --base main \
+    --base "$DEFAULT_BRANCH" \
     --head "$BRANCH" \
     --title "🤖 #${ISSUE}: ${ISSUE_TITLE}" \
     --body "$(cat <<EOF
@@ -179,7 +181,7 @@ ${CLAUDE_WARNING}
 ${ISSUE_TITLE}
 
 ## 変更内容
-$(git log main..HEAD --oneline)
+$(git log "${DEFAULT_BRANCH}..HEAD" --oneline)
 
 ---
 ⚠️ **人間によるレビューが必要です。** マージ前にコードを確認してください。
