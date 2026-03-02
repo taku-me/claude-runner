@@ -76,16 +76,27 @@ main() {
 
   ensure_labels
 
+  GH_FAIL_COUNT=0
+
   while true; do
     log "--- Issue をチェック中 (label: claude-task) ---"
 
     # claude-task ラベルが付いた open Issue を取得
-    ISSUES=$(gh issue list \
+    if ! ISSUES=$(gh issue list \
       --repo "$REPO" \
       --label "claude-task" \
       --state open \
       --json number,title \
-      --limit 10 2>/dev/null || echo "[]")
+      --limit 10 2>&1); then
+      GH_FAIL_COUNT=$((GH_FAIL_COUNT + 1))
+      log "警告: gh issue list が失敗しました (${GH_FAIL_COUNT}回連続): ${ISSUES}"
+      if [[ "$GH_FAIL_COUNT" -ge 5 ]]; then
+        log "エラー: gh issue list が${GH_FAIL_COUNT}回連続で失敗しています。認証やネットワークを確認してください。"
+      fi
+      ISSUES="[]"
+    else
+      GH_FAIL_COUNT=0
+    fi
 
     COUNT=$(echo "$ISSUES" | jq 'length')
 
