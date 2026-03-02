@@ -1,7 +1,7 @@
 VERSION = "1.0.0"
 AUTHOR = "claude-runner"
 
-__all__ = ["VERSION", "hello", "goodbye", "greet_all"]
+__all__ = ["VERSION", "AUTHOR", "hello", "goodbye", "greet_all", "count_greetings"]
 
 import logging
 
