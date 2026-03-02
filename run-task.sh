@@ -148,6 +148,12 @@ if [[ -n "$UNCOMMITTED" ]]; then
   git commit -m "Claude auto-fix for issue #${ISSUE}: ${ISSUE_TITLE}"
 fi
 
+# --- CLAUDE_EXIT 非ゼロ時の警告文を生成 ---
+CLAUDE_WARNING=""
+if [[ "$CLAUDE_EXIT" -ne 0 ]]; then
+  CLAUDE_WARNING=$'\n> ⚠️ Claude Code は終了コード '"${CLAUDE_EXIT}"' で終了しました。実装が不完全な可能性があります。\n'
+fi
+
 # --- Push & PR 作成 ---
 git push -u origin "$BRANCH" --force-with-lease
 
@@ -168,7 +174,7 @@ else
 Closes #${ISSUE}
 
 この PR は Claude Code によって自動生成されました。
-
+${CLAUDE_WARNING}
 ## Issue
 ${ISSUE_TITLE}
 
