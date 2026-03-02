@@ -1,5 +1,7 @@
 VERSION = "1.0.0"
 
+__all__ = ["VERSION", "hello", "goodbye", "greet_all"]
+
 import logging
 
 logger = logging.getLogger(__name__)
