@@ -22,6 +22,7 @@ set -euo pipefail
 REPO=""
 INTERVAL=300     # 5分
 MAX_TURNS=30
+MODEL="claude-sonnet-4-6"
 AUTO_MERGE=false
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 STATE_DIR="${HOME}/.claude-runner"
@@ -32,6 +33,7 @@ while [[ $# -gt 0 ]]; do
     --repo)        REPO="$2";       shift 2 ;;
     --interval)    INTERVAL="$2";   shift 2 ;;
     --max-turns)   MAX_TURNS="$2";  shift 2 ;;
+    --model)       MODEL="$2";      shift 2 ;;
     --auto-merge)  AUTO_MERGE=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
@@ -121,7 +123,7 @@ main() {
         log "  #${ISSUE_NUM}: ${ISSUE_TITLE} — 処理開始"
 
         # run-task.sh を実行
-        RUN_ARGS=(--repo "$REPO" --issue "$ISSUE_NUM" --max-turns "$MAX_TURNS")
+        RUN_ARGS=(--repo "$REPO" --issue "$ISSUE_NUM" --max-turns "$MAX_TURNS" --model "$MODEL")
         if [[ "$AUTO_MERGE" == "true" ]]; then
           RUN_ARGS+=(--auto-merge)
         fi

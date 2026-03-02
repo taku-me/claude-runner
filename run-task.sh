@@ -21,6 +21,7 @@ unset CLAUDECODE 2>/dev/null || true
 
 # --- デフォルト値 ---
 MAX_TURNS=30
+MODEL="claude-sonnet-4-6"
 REPO=""
 ISSUE=""
 AUTO_MERGE=false
@@ -32,13 +33,14 @@ while [[ $# -gt 0 ]]; do
     --repo)        REPO="$2";       shift 2 ;;
     --issue)       ISSUE="$2";      shift 2 ;;
     --max-turns)   MAX_TURNS="$2";  shift 2 ;;
+    --model)       MODEL="$2";      shift 2 ;;
     --auto-merge)  AUTO_MERGE=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
 
 if [[ -z "$REPO" || -z "$ISSUE" ]]; then
-  echo "Usage: $0 --repo OWNER/REPO --issue NUMBER [--max-turns N] [--auto-merge]"
+  echo "Usage: $0 --repo OWNER/REPO --issue NUMBER [--max-turns N] [--model MODEL] [--auto-merge]"
   exit 1
 fi
 
@@ -114,11 +116,12 @@ ${ISSUE_BODY}
 - 不明点があっても人間に聞けないので、最善の判断で進めること
 - PR の作成は不要（このスクリプトが行う）"
 
-log "Claude Code を起動 (max-turns: ${MAX_TURNS})"
+log "Claude Code を起動 (max-turns: ${MAX_TURNS}, model: ${MODEL})"
 
 CLAUDE_EXIT=0
 claude -p "$PROMPT" \
   --max-turns "$MAX_TURNS" \
+  --model "$MODEL" \
   --dangerously-skip-permissions \
   --verbose < /dev/null 2>&1 | tee -a "$LOG_FILE" || CLAUDE_EXIT=$?
 
