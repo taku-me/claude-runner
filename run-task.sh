@@ -74,6 +74,8 @@ if [[ -d "$WORK_DIR/.git" ]]; then
   log "既存のローカルリポジトリを更新"
   cd "$WORK_DIR"
   git checkout main 2>/dev/null || git checkout master
+  git clean -fd
+  git checkout -- .
   git pull --ff-only
 else
   log "リポジトリをクローン"
