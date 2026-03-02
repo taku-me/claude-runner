@@ -1,8 +1,8 @@
-VERSION = "1.0.0"
-
 import logging
 
 logger = logging.getLogger(__name__)
+
+VERSION = "1.0.0"
 
 
 def hello(name):
