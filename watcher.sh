@@ -22,21 +22,23 @@ set -euo pipefail
 REPO=""
 INTERVAL=300     # 5分
 MAX_TURNS=30
+AUTO_MERGE=false
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 STATE_DIR="${HOME}/.claude-runner"
 
 # --- 引数パース ---
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --repo)       REPO="$2";       shift 2 ;;
-    --interval)   INTERVAL="$2";   shift 2 ;;
-    --max-turns)  MAX_TURNS="$2";  shift 2 ;;
+    --repo)        REPO="$2";       shift 2 ;;
+    --interval)    INTERVAL="$2";   shift 2 ;;
+    --max-turns)   MAX_TURNS="$2";  shift 2 ;;
+    --auto-merge)  AUTO_MERGE=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
 
 if [[ -z "$REPO" ]]; then
-  echo "Usage: $0 --repo OWNER/REPO [--interval SECONDS] [--max-turns N]"
+  echo "Usage: $0 --repo OWNER/REPO [--interval SECONDS] [--max-turns N] [--auto-merge]"
   exit 1
 fi
 
@@ -72,6 +74,7 @@ main() {
   log "  リポジトリ: ${REPO}"
   log "  監視間隔:   ${INTERVAL}秒"
   log "  Max turns:  ${MAX_TURNS}"
+  log "  Auto-merge: ${AUTO_MERGE}"
   log "=========================================="
 
   ensure_labels
@@ -118,10 +121,11 @@ main() {
         log "  #${ISSUE_NUM}: ${ISSUE_TITLE} — 処理開始"
 
         # run-task.sh を実行
-        if "${SCRIPT_DIR}/run-task.sh" \
-            --repo "$REPO" \
-            --issue "$ISSUE_NUM" \
-            --max-turns "$MAX_TURNS"; then
+        RUN_ARGS=(--repo "$REPO" --issue "$ISSUE_NUM" --max-turns "$MAX_TURNS")
+        if [[ "$AUTO_MERGE" == "true" ]]; then
+          RUN_ARGS+=(--auto-merge)
+        fi
+        if "${SCRIPT_DIR}/run-task.sh" "${RUN_ARGS[@]}"; then
           log "  #${ISSUE_NUM}: 成功"
           mark_processed "$ISSUE_NUM"
         else

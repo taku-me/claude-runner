@@ -23,20 +23,22 @@ unset CLAUDECODE 2>/dev/null || true
 MAX_TURNS=30
 REPO=""
 ISSUE=""
+AUTO_MERGE=false
 WORK_BASE="/tmp/claude-runner"
 
 # --- 引数パース ---
 while [[ $# -gt 0 ]]; do
   case $1 in
-    --repo)     REPO="$2";       shift 2 ;;
-    --issue)    ISSUE="$2";      shift 2 ;;
-    --max-turns) MAX_TURNS="$2"; shift 2 ;;
+    --repo)        REPO="$2";       shift 2 ;;
+    --issue)       ISSUE="$2";      shift 2 ;;
+    --max-turns)   MAX_TURNS="$2";  shift 2 ;;
+    --auto-merge)  AUTO_MERGE=true; shift ;;
     *) echo "Unknown option: $1"; exit 1 ;;
   esac
 done
 
 if [[ -z "$REPO" || -z "$ISSUE" ]]; then
-  echo "Usage: $0 --repo OWNER/REPO --issue NUMBER [--max-turns N]"
+  echo "Usage: $0 --repo OWNER/REPO --issue NUMBER [--max-turns N] [--auto-merge]"
   exit 1
 fi
 
@@ -182,14 +184,35 @@ EOF
   log "PR 作成完了: ${PR_URL}"
 fi
 
-# ラベルを done に変更
-set_label "claude-working" "claude-done"
+# --- Auto-merge ---
+if [[ "$AUTO_MERGE" == "true" ]]; then
+  log "Auto-merge: PR をマージ中..."
+  if gh pr merge "$PR_URL" --repo "$REPO" --merge --delete-branch 2>&1 | tee -a "$LOG_FILE"; then
+    log "Auto-merge: 成功"
+    set_label "claude-working" "claude-done"
+    gh issue comment "$ISSUE" --repo "$REPO" --body "$(cat <<EOF
+🤖 **Claude Runner**: PR を作成し、自動マージしました → ${PR_URL}
+EOF
+)"
+  else
+    log "Auto-merge: 失敗（コンフリクトの可能性）— 手動レビューが必要です"
+    set_label "claude-working" "claude-done"
+    gh issue comment "$ISSUE" --repo "$REPO" --body "$(cat <<EOF
+🤖 **Claude Runner**: PR を作成しましたが、自動マージに失敗しました → ${PR_URL}
 
-gh issue comment "$ISSUE" --repo "$REPO" --body "$(cat <<EOF
+手動でのレビュー・マージをお願いします。
+EOF
+)"
+  fi
+else
+  # ラベルを done に変更
+  set_label "claude-working" "claude-done"
+  gh issue comment "$ISSUE" --repo "$REPO" --body "$(cat <<EOF
 🤖 **Claude Runner**: PR を作成しました → ${PR_URL}
 
 レビューをお願いします。
 EOF
 )"
+fi
 
 log "=== Issue #${ISSUE} の処理完了 ==="
