@@ -1,4 +1,4 @@
-from hello import hello, goodbye, greet_all
+from hello import __version__, hello, goodbye, greet_all
 
 
 def test_hello():
@@ -31,3 +31,7 @@ def test_goodbye_empty_string():
 
 def test_goodbye_none():
     assert goodbye(None) == "Goodbye, World!"
+
+
+def test_version():
+    assert __version__ == "1.0.0"
