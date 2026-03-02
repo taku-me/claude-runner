@@ -9,6 +9,14 @@ def test_goodbye():
     assert goodbye("World") == "Goodbye, World!"
 
 
+def test_hello_custom_name():
+    assert hello("Alice") == "Hello, Alice!"
+
+
+def test_goodbye_custom_name():
+    assert goodbye("Alice") == "Goodbye, Alice!"
+
+
 def test_greet_all():
     assert greet_all(["Alice", "Bob"]) == ["Hello, Alice!", "Hello, Bob!"]
 
