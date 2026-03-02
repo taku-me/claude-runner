@@ -22,5 +22,7 @@ def goodbye(name):
 
 
 def greet_all(names):
-    logger.debug("greet_all called with %d name(s)", len(names))
-    return [hello(name) for name in names]
+    logger.debug("greet_all called with names=%r", names)
+    results = [hello(name) for name in names]
+    logger.debug("greet_all produced %d greeting(s)", len(results))
+    return results
