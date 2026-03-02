@@ -5,20 +5,20 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def hello(name):
-    logger.debug("hello called with name=%r", name)
+def _greet(greeting, name):
+    logger.debug("%s called with name=%r", greeting.lower(), name)
     if not name:
         name = "World"
-    logger.info("Hello, %s!", name)
-    return f"Hello, {name}!"
+    logger.info("%s, %s!", greeting, name)
+    return f"{greeting}, {name}!"
+
+
+def hello(name):
+    return _greet("Hello", name)
 
 
 def goodbye(name):
-    logger.debug("goodbye called with name=%r", name)
-    if not name:
-        name = "World"
-    logger.info("Goodbye, %s!", name)
-    return f"Goodbye, {name}!"
+    return _greet("Goodbye", name)
 
 
 def greet_all(names):
