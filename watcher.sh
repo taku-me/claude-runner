@@ -95,7 +95,7 @@ main() {
       log "${COUNT} 件のタスクを検出"
 
       # 1件ずつ処理（並列にはしない — レート制限対策）
-      echo "$ISSUES" | jq -c '.[]' | while read -r issue; do
+      while read -r issue; do
         ISSUE_NUM=$(echo "$issue" | jq -r '.number')
         ISSUE_TITLE=$(echo "$issue" | jq -r '.title')
 
@@ -121,7 +121,7 @@ main() {
         # タスク間に少し間を空ける（レート制限対策）
         log "  次のタスクまで60秒待機..."
         sleep 60
-      done
+      done < <(echo "$ISSUES" | jq -c '.[]')
     fi
 
     sleep "$INTERVAL"
