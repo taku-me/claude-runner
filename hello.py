@@ -1,4 +1,5 @@
 VERSION = "1.0.0"
+AUTHOR = "claude-runner"
 
 import logging
 
