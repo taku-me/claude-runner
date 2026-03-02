@@ -5,7 +5,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-def hello(name):
+def hello(name=None):
     logger.debug("hello called with name=%r", name)
     if not name:
         name = "World"
@@ -13,7 +13,7 @@ def hello(name):
     return f"Hello, {name}!"
 
 
-def goodbye(name):
+def goodbye(name=None):
     logger.debug("goodbye called with name=%r", name)
     if not name:
         name = "World"

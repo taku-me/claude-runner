@@ -31,3 +31,11 @@ def test_goodbye_empty_string():
 
 def test_goodbye_none():
     assert goodbye(None) == "Goodbye, World!"
+
+
+def test_hello_no_args():
+    assert hello() == "Hello, World!"
+
+
+def test_goodbye_no_args():
+    assert goodbye() == "Goodbye, World!"
