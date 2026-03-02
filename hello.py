@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 def hello(name):
     logger.debug("hello called with name=%r", name)
-    if not name:
+    if name is None or name == "":
         name = "World"
     logger.info("Hello, %s!", name)
     return f"Hello, {name}!"
@@ -16,7 +16,7 @@ def hello(name):
 
 def goodbye(name):
     logger.debug("goodbye called with name=%r", name)
-    if not name:
+    if name is None or name == "":
         name = "World"
     logger.info("Goodbye, %s!", name)
     return f"Goodbye, {name}!"
