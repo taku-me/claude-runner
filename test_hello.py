@@ -1,4 +1,4 @@
-from hello import hello, goodbye, greet_all
+from hello import hello, goodbye, greet_all, count_greetings
 
 
 def test_hello():
@@ -31,3 +31,15 @@ def test_goodbye_empty_string():
 
 def test_goodbye_none():
     assert goodbye(None) == "Goodbye, World!"
+
+
+def test_count_greetings():
+    assert count_greetings(["Alice", "Bob", "Charlie"]) == 3
+
+
+def test_count_greetings_single():
+    assert count_greetings(["Alice"]) == 1
+
+
+def test_count_greetings_empty():
+    assert count_greetings([]) == 0

@@ -24,3 +24,10 @@ def goodbye(name):
 def greet_all(names):
     logger.debug("greet_all called with %d name(s)", len(names))
     return [hello(name) for name in names]
+
+
+def count_greetings(names):
+    logger.debug("count_greetings called with %d name(s)", len(names))
+    greetings = greet_all(names)
+    logger.info("Greeted %d person(s)", len(greetings))
+    return len(greetings)
