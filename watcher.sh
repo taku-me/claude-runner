@@ -112,11 +112,10 @@ main() {
             --issue "$ISSUE_NUM" \
             --max-turns "$MAX_TURNS"; then
           log "  #${ISSUE_NUM}: 成功"
+          mark_processed "$ISSUE_NUM"
         else
           log "  #${ISSUE_NUM}: 失敗 (exit code: $?)"
         fi
-
-        mark_processed "$ISSUE_NUM"
 
         # タスク間に少し間を空ける（レート制限対策）
         log "  次のタスクまで60秒待機..."
